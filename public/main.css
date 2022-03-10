@@ -10,14 +10,14 @@
   --color-neutral-100: #fff;
 
   --color-text: #040d14;
-  --color-title: #ffffff;
+  --color-title: #fff;
   --color-nav: #004b84;
   --color-bg: var(--color-nav); /* match nav until theme loaded */
   --color-border-header: #818384;
   --color-border: var(--color-neutral-10);
 
-  --color-available: #ffffff;
-  --color-empty: #ffffff;
+  --color-available: #fff;
+  --color-empty: #fff;
   --color-miss: transparent;
   --color-present: #ffcb22;
   --color-match: #9fef00;
@@ -27,6 +27,7 @@
   --color-notice-bg: var(--color-neutral-10);
   --color-notice-text: var(--color-neutral-100);
 }
+
 @media screen and (min-height: 400px) {
   :root {
     --header-height: 100px;
@@ -105,8 +106,20 @@ header nav {
 
 .nav-link {
   display: inline-block;
+  position: relative;
   color: var(--color-bg);
   cursor: pointer;
+}
+
+.nav-notification {
+  background-color: var(--color-present);
+  border-radius: 50%;
+  color: var(--color-text);
+  padding: 0 3px;
+  font-size: 10px;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .nav-tabs {
@@ -147,6 +160,7 @@ header nav {
   right: 0;
   pointer-events: none;
 }
+
 @media screen and (min-width: 600px) and (min-height: 400px) {
   .title {
     font-size: 2rem;
@@ -169,6 +183,7 @@ main {
   flex-direction: column;
   padding: 4px;
 }
+
 @media screen and (min-height: 400px) {
   main {
     padding: 1rem;
@@ -259,6 +274,7 @@ main {
     height: auto;
     flex-grow: unset;
   }
+
   @media only screen and (min-width: 800px) {
     .guesses-grid {
       min-height: auto;
@@ -305,11 +321,13 @@ main {
   min-width: 80px;
   text-transform: capitalize;
 }
+
 @media screen and (min-height: 400px) {
   .key {
     line-height: 42px;
   }
 }
+
 @media screen and (min-width: 600px) and (min-height: 700px) {
   .keyboard {
     gap: 8px;
@@ -327,7 +345,7 @@ main {
 .key.available,
 .key.present,
 .key.match {
-  box-shadow: rgba(0, 0, 0, 30) 2px 2px;
+  box-shadow: rgb(0 0 0) 2px 2px;
 }
 
 .guesses-tile:nth-of-type(1) {
@@ -361,15 +379,15 @@ main {
 }
 
 .emoji-image {
-  filter: drop-shadow(0px 0px 1px var(--emoji-outline, var(--color-nav)));
+  filter: drop-shadow(0 0 1px var(--emoji-outline, var(--color-nav)));
 }
 
 .notice .emoji-image {
-  filter: drop-shadow(0px 0px 0px #fff);
+  filter: drop-shadow(0 0 0 #fff);
 }
 
 .cursor {
-  box-shadow: 0 0 0px 1px rgba(0, 0, 0, 30), rgba(0, 0, 0, 30) 3px 3px;
+  box-shadow: 0 0 0 1px rgb(0 0 0), rgb(0 0 0) 3px 3px;
 }
 
 .hint-area {
@@ -415,16 +433,17 @@ main {
 
 .masked-game-buttons button {
   cursor: pointer;
-  background-color: var(--color-neutral-10);
-  color: var(--color-neutral-100);
-  border-radius: 4px;
-  border: none;
-  display: flex;
+  background-color: var(--color-empty);
+  color: var(--color-text);
+  border-radius: 15px;
+  border: 2px solid var(--color-border);
+  box-shadow: rgb(0 0 0) 2px 2px;
   align-items: center;
   justify-content: center;
   gap: 4px;
-  padding: 4px 6px 4px 12px;
-  font-size: 14px;
+  padding: 4px;
+  font-size: 1rem;
+  width: 70px;
 }
 
 .masked-game-buttons .material-icons {
@@ -432,11 +451,7 @@ main {
 }
 
 .masked-game-buttons button:hover {
-  filter: brightness(1.5);
-}
-
-.masked-game-buttons button:focus-visible {
-  outline: 2px solid white;
+  outline: 2px solid var(--color-neutral-100);
 }
 
 .unavailable {
@@ -471,7 +486,6 @@ main {
   align-items: center;
   justify-content: center;
   padding: 4px;
-  display: flex;
   gap: 2px;
 }
 .collection-tiles .guesses-tile,
