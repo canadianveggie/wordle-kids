@@ -1,5 +1,7 @@
 // @ts-check
 
+// NOTE: this file should require('./wordHints') instead of using global
+
 const VOWELS = new Set("AEIOU".split(""));
 const CLUSTERS = ["ST", "TH", "CH", "SH", "NT", "CK", "ND"];
 
@@ -35,7 +37,7 @@ const LETTERS_BY_FREQUENCY = [
 
 /**
  * @param {string[]} letters
- * @returns {string | null}
+ * @returns {string | null} - the multiple letter
  */
 function findMultiple(letters) {
   const seen = {};
@@ -150,6 +152,8 @@ function combineKnowledge(k1, k2) {
   return newKnowledge;
 }
 
+const finalGuessIndex = 6 - 1;
+
 /**
  * Provide a hint based on letters found so far and unique features of target.
  *
@@ -158,9 +162,29 @@ function combineKnowledge(k1, k2) {
  * @param {string} target - the answer to today's puzzle
  * @param {import("../types").Knowledge} knowledge - the state of what we know
  * @param {import("../types").Settings} settings - game settings
+ * @param {number} guessIndex - 0-based guess number
  * @returns {import("../types").Hint | null}
  */
-function getHint(target, knowledge, settings) {
+function getHint(target, knowledge, settings, guessIndex, lastGuess = "") {
+  // last chance, so provide a strong hint
+  const wordHint = window.wordHints[target];
+  if (guessIndex === finalGuessIndex) {
+    if (wordHint && wordHint.emoji) {
+      return { message: wordHint.emoji };
+    }
+    if (wordHint && wordHint.category) {
+      return { message: wordHint.category };
+    }
+  }
+
+  if (guessIndex === finalGuessIndex - 1) {
+    // Save the category for the last hint if there is no emoji
+    if (wordHint && wordHint.category && wordHint.emoji) {
+      return { message: wordHint.category };
+    }
+  }
+
+  // You're so close
   if (knowledge.matches.length + knowledge.presents.length === target.length) {
     return null;
   }
@@ -211,11 +235,12 @@ function getHint(target, knowledge, settings) {
   }
 
   // warn about multiples
-  const multiple = findMultiple(targetLetters);
-  if (multiple) {
+  const targetMultiple = findMultiple(targetLetters);
+  const guessMultiple = findMultiple(lastGuess.split(""));
+  if (targetMultiple && guessMultiple !== targetMultiple) {
     return {
-      message: `There could be more than one ${prettyLetter(multiple)}`,
-      letter: multiple,
+      message: `There could be more than one ${prettyLetter(targetMultiple)}`,
+      letter: targetMultiple,
     };
   }
 
